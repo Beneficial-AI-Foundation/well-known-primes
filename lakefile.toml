@@ -1,0 +1,10 @@
+name = "well-known-prime"
+version = "0.1.0"
+defaultTargets = ["well-known-prime"]
+
+[[lean_lib]]
+name = "WellKnownPrime"
+
+[[lean_exe]]
+name = "well-known-prime"
+root = "Main"
