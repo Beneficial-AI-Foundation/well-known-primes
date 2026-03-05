@@ -1,7 +1,8 @@
 # Well-known primes module
 
 Implement a `well_known_prime` tactic that proves `IsPrime n` using
-native_decide with a two-tier strategy: first an O(1) HashSet lookup
+`decide` (with `native_decide` fallback for large primes) via a two-tier
+strategy: first an O(1) HashSet lookup
 against precomputed elliptic curve prime sets (Curve25519, secp256k1,
 NIST P-256/384, Ed448-Goldilocks, E-521, etc.), then a deterministic
 Miller-Rabin fallback for primes not in the sets.

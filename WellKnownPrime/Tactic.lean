@@ -5,7 +5,8 @@
   1. Fast O(1) HashSet lookup against known elliptic curve primes
   2. Falls back to deterministic Miller-Rabin for primes not in the sets
 
-  Both paths are compiled to native code via `native_decide`.
+  Prefers `decide` (kernel reduction) and falls back to `native_decide`
+  for large primes that exceed the kernel evaluator's capacity.
 -/
 
 import WellKnownPrime.Primality
@@ -28,7 +29,8 @@ instance (n : Nat) : Decidable (IsPrime n) :=
 open Lean Elab Tactic
 
 /-- `well_known_prime` proves goals of the form `WellKnownPrime.IsPrime n`
-    by evaluating the combined primality test via native code execution.
+    by evaluating the combined primality test via `decide`, falling back to
+    `native_decide` for large primes that the kernel evaluator cannot reduce.
 
     For known elliptic curve primes, this is an O(1) HashSet lookup.
     For other primes, it falls back to deterministic Miller-Rabin.
@@ -39,8 +41,8 @@ open Lean Elab Tactic
 -/
 elab "well_known_prime" : tactic => do
   try
-    evalTactic (← `(tactic| native_decide))
+    evalTactic (← `(tactic| decide))
   catch _ =>
-    evalTactic (← `(tactic| decide +native))
+    evalTactic (← `(tactic| native_decide))
 
 end WellKnownPrime
